@@ -14,7 +14,7 @@ from datetime import date
 import uuid
 from osgeo import gdal, osr, ogr
 import overpass
-import crawl_SLUB
+from utils import crawl_SLUB
 
 
 def getISOTime():
