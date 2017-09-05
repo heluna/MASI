@@ -18,7 +18,7 @@ import csv
 from utils.DublinCoreTerms import DublinCore
 
 # own module
-from metaextractors import metaextractor
+import metaextractor
 
 
 logger = logging.getLogger()

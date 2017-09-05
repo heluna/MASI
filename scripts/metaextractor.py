@@ -11,10 +11,10 @@ import os
 import csv
 from datetime import datetime
 from datetime import date
-import uuid
-from osgeo import gdal, osr, ogr
-import overpass
-from utils import crawl_SLUB
+
+# own modules
+from utils import crawlSLUB
+from utils import GeoRefInfo as gref
 
 
 def getISOTime():
@@ -24,94 +24,8 @@ def getISOTime():
     return iso_time
 
 
-def createUUID():
-    '''Return a universally unique identifier'''
-    uniqueID = str(uuid.uuid1())
-    return uniqueID
-
-
-def getGeoRef(georefFile):
-    '''Return the EPSG Code from georeferenced file information'''
-    if georefFile.endswith(".tif"):
-        grefFile = gdal.Open(georefFile)
-        prj = grefFile.GetProjection()
-        srs = osr.SpatialReference(wkt=prj)
-        auth = srs.GetAttrValue("AUTHORITY", 0)
-        code = srs.GetAttrValue("AUTHORITY", 1)
-    elif georefFile.endswith(".shp"):
-        driver = ogr.GetDriverByName('ESRI Shapefile')
-        dataset = driver.Open(georefFile)
-        layer = dataset.GetLayer()
-        srs = layer.GetSpatialRef()
-        auth = srs.GetAttrValue("AUTHORITY", 0)
-        code = srs.GetAttrValue("AUTHORITY", 1)
-    elif georefFile.endswith(".geojson") or georefFile.endswith(".json"):
-        driver = ogr.GetDriverByName('GeoJSON')
-        dataset = driver.Open(georefFile)
-        layer = dataset.GetLayer()
-        srs = layer.GetSpatialRef()
-        auth = srs.GetAttrValue("AUTHORITY", 0)
-        code = srs.GetAttrValue("AUTHORITY", 1)
-    else:
-        auth = None
-        code = None
-    return auth, code
-
-
-def getBBox(georefFile):
-    '''Return the bounding box coordinates of the map sheet '''
-    grefFile = gdal.Open(georefFile)
-    inEPSG = getGeoRef(georefFile)
-    inSpatialRef = osr.SpatialReference()   
-    try:
-        inSpatialRef.ImportFromEPSG(int(inEPSG[1]))
-        outSpatialRef = osr.SpatialReference()
-        outSpatialRef.ImportFromEPSG(int(4326))
-        transform = osr.CoordinateTransformation(inSpatialRef, outSpatialRef)
-        cols = grefFile.RasterXSize
-        rows = grefFile.RasterYSize
-        geotransform = grefFile.GetGeoTransform()
-        westLon = originX = geotransform[0]
-        northLat = originY = geotransform[3]
-        pixelWidth = geotransform[1]
-        pixelHeight = geotransform[5]
-        Width = cols*pixelWidth
-        Height = rows*pixelHeight
-        eastLon = originX+Width
-        southLat = originY+Height
-        latlong1 = transform.TransformPoint(westLon, northLat)
-        latlong2 = transform.TransformPoint(eastLon, southLat)
-        return latlong2[1], latlong1[0], latlong1[1], latlong2[0]
-    except:
-        pass
-    
- 
-def getPlaceNames(georefFile):
-    '''Return the OSM place names within the bounding box of the map sheet '''
-    api = overpass.API()
-    try:
-        coords = getBBox(georefFile)
-        query = '(node["place"="village" ](%s,%s,%s,%s);node["place"="suburb" ]\
-                  (%s,%s,%s,%s);node["place"="town" ](%s,%s,%s,%s); \
-                  node["place"="city" ](%s,%s,%s,%s);)' % \
-                  (coords[0], coords[1], coords[2], coords[3],
-                   coords[0], coords[1], coords[2], coords[3],
-                   coords[0], coords[1], coords[2], coords[3],
-                   coords[0], coords[1], coords[2], coords[3])
-        response = api.Get(query)
-        towns = response["features"]
-        for town in towns:
-            props = town["properties"]
-            try:
-                yield props["name"]
-            except:
-                pass
-    except Exception as e:
-        print(e)
-        print("INFO: No information on geonames available for %s." % georefFile)
-    
 def list_to_xml(datalist, rootname, mapfile, georefFile):
-    
+
     '''Collect metadata from csv, web and file and return basic XML string'''
     base = os.path.basename(mapfile)
     filename = os.path.splitext(base)[0]
@@ -127,13 +41,13 @@ def list_to_xml(datalist, rootname, mapfile, georefFile):
 
     # ----metadata UUID-----
     child2 = etree.SubElement(root, "mdFileID")
-    child2.text = createUUID()
+    child2.text = gref.createUUID()
 
     # ------data identification--------------------------
     child4 = etree.SubElement(root, "dataIdInfo")
             # ------keywords
     child42a = etree.SubElement(child4, "descKeys")
-    generator = getPlaceNames(georefFile)
+    generator = gref.getPlaceNames(georefFile)
     for value in generator:
         child42a1 = etree.SubElement(child42a, "keyword")
         child42a1.text = value
@@ -186,7 +100,7 @@ def list_to_xml(datalist, rootname, mapfile, georefFile):
     child434 = etree.SubElement(child43, "resRefDate")
     child4341 = etree.SubElement(child434, "refDate")
     child4342 = etree.SubElement(child434, "refDateType")
-    citation = crawl_SLUB.readUrl(filename)
+    citation = crawlSLUB.readUrl(filename)
     try:
         int(citation[0])
         child4341.text = date(int(citation[0]), 1, 1).isoformat()
@@ -298,3 +212,6 @@ def writeXml(xslfile, mapfile, georefFile, outputFile):
     iso19139 = transform(xslfile, mapfile, georefFile)
     iso19139.write(outputFile,
                    pretty_print=True, xml_declaration=True, encoding='UTF-8')
+
+if __name__ == "__main__":
+    print(getISOTime())

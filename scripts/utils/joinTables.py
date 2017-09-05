@@ -9,8 +9,17 @@ import pandas as pd
 
 '''join tables based on a key'''
 
-def join_tables(table1, table2, key, output):
-    df1 = pd.read_csv(table1, encoding='ISO-8859-1', index_col=False, dtype=str, delimiter=';')
-    df2 = pd.read_csv(table2, encoding='UTF-8', index_col=False, dtype=str, delimiter=',')
+
+def join_tables(table1, table2, key):
+    df1 = pd.read_csv(table1, encoding='ISO-8859-1', index_col=False, dtype=str)
+    df2 = pd.read_csv(table2, encoding='ISO-8859-1', index_col=False, dtype=str)
     df3 = pd.merge(df1, df2, on=key, how='left')
-    df3.to_csv(output, index=False, dtype=str, sep=";", encoding='UTF-8')
+    return df3
+
+if __name__ == "__main__":
+    tab1 = r'C:\Users\user\Desktop\georef\crawled_metadata_slub_maps.csv'
+    tab2 = r'C:\Users\user\Desktop\georef\metadata_georef_maps_-place.csv'
+    key = 'Datei'
+    out = r'C:\Users\user\Desktop\georef\metadata_join.csv'
+
+    join_tables(tab1, tab2, key).to_csv(out, index=False, dtype=str, sep=";")
