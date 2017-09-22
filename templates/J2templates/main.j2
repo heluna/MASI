@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+{% import 'common/iso19139-charstring.j2' as cs %}
+<gmd:MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd">
+  <gmd:fileIdentifier>
+    <gco:CharacterString>{{ record['metadata']['identifier'] }}</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:language>
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeSpace="ISO 639-2" codeListValue="{{ record['metadata']['language'] }}">{{ record['metadata']['language'] }}</gmd:LanguageCode>
+  </gmd:language>
+  <gmd:characterSet>
+    <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['metadata']['charset'] }}">{{ record['metadata']['charset'] }}</gmd:MD_CharacterSetCode>
+  </gmd:characterSet>
+  {% if record['metadata']['parentidentifier'] != None %}
+  <gmd:parentIdentifier>
+    <gco:CharacterString>{{ record['metadata']['parentidentifier'] }}</gco:CharacterString>
+  </gmd:parentIdentifier>
+  {% endif %}
+  <gmd:hierarchyLevel>
+    <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['metadata']['hierarchylevel'] }}">{{ record['metadata']['hierarchylevel'] }}</gmd:MD_ScopeCode>
+  </gmd:hierarchyLevel>
+  {% if record['metadata']['hierarchyLevelName'] != None %}
+  <gmd:hierarchyLevelName>
+   <gco:CharacterString>{{ record['metadata']['hierarchyLevelName'] }}</gco:CharacterString>
+  </gmd:hierarchyLevelName>
+  {% endif %}
+  {% set contact = record['contact']['main'] %}
+  {% set role = 'pointOfContact' %}
+  <gmd:contact>
+  {% include "contact.j2" %}
+  </gmd:contact>
+  <gmd:dateStamp>
+    {% set datestamp = record['metadata']['datestamp']|normalize_datestring %}
+    {% if datestamp|length > 11 %}
+    <gco:DateTime>{{ datestamp }}</gco:DateTime>
+    {% else %}
+    <gco:Date>{{ datestamp }}</gco:Date>
+    {% endif %}
+  </gmd:dateStamp>
+  <gmd:metadataStandardName>
+    <gco:CharacterString>ISO 19115:2003 - Geographic information - Metadata</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:metadataStandardVersion>
+    <gco:CharacterString>ISO 19115:2003</gco:CharacterString>
+  </gmd:metadataStandardVersion>
+  {% if record['metadata']['language_alternate'] != None %}
+  <gmd:locale>
+    <gmd:PT_Locale>
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeSpace="ISO 639-2" codeListValue="{{ record['metadata']['language_alternate'] }}">{{ record['metadata']['language_alternate'] }}</gmd:LanguageCode>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['metadata']['charset'] }}">{{ record['metadata']['charset'] }}</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  {% endif %}
+  {% if record['spatial']['crs']['code'] != None %}
+  {% if record['spatial']['crs']['authority'] == 'EPSG' %}
+  <gmd:referenceSystemInfo>
+    <gmd:MD_ReferenceSystem>
+      <gmd:referenceSystemIdentifier>
+        <gmd:RS_Identifier>
+          <gmd:authority>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>European Petroleum Survey Group (EPSG) Geodetic Parameter Registry</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2008-11-12</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeSpace="ISOTC211/19115" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:citedResponsibleParty>
+                <gmd:CI_ResponsibleParty>
+                  <gmd:organisationName>
+                    <gco:CharacterString>European Petroleum Survey Group</gco:CharacterString>
+                  </gmd:organisationName>
+                  <gmd:contactInfo>
+                    <gmd:CI_Contact>
+                      <gmd:onlineResource>
+                        <gmd:CI_OnlineResource>
+                          <gmd:linkage>
+                            <gmd:URL>http://www.epsg-registry.org</gmd:URL>
+                          </gmd:linkage>
+                        </gmd:CI_OnlineResource>
+                      </gmd:onlineResource>
+                    </gmd:CI_Contact>
+                  </gmd:contactInfo>
+                  <gmd:role>
+                    <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeSpace="ISOTC211/19115" codeListValue="originator">originator</gmd:CI_RoleCode>
+                  </gmd:role>
+                </gmd:CI_ResponsibleParty>
+              </gmd:citedResponsibleParty>
+            </gmd:CI_Citation>
+          </gmd:authority>
+          <gmd:code>
+            <gco:CharacterString>EPSG:{{ record['spatial']['crs']['code'] }}</gco:CharacterString>
+          </gmd:code>
+          <gmd:codeSpace>
+            <gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString>
+          </gmd:codeSpace>          
+          <gmd:version>
+            <gco:CharacterString>6.18.3</gco:CharacterString>
+          </gmd:version>
+        </gmd:RS_Identifier>
+      </gmd:referenceSystemIdentifier>
+    </gmd:MD_ReferenceSystem>
+  </gmd:referenceSystemInfo>
+  {% else %}
+  <gmd:referenceSystemInfo>
+    <gmd:MD_ReferenceSystem>
+      <gmd:referenceSystemIdentifier>
+        <gmd:RS_Identifier>
+          <gmd:code>
+            <gco:CharacterString>{{ record['spatial']['crs']['authority'] }}:{{ record['spatial']['crs']['code'] }}</gco:CharacterString>
+          </gmd:code>
+          <gmd:codeSpace>
+            <gco:CharacterString>urn:ogc:def:crs:{{ record['spatial']['crs']['authority'] }}</gco:CharacterString>
+          </gmd:codeSpace>
+        </gmd:RS_Identifier>
+      </gmd:referenceSystemIdentifier>
+    </gmd:MD_ReferenceSystem>
+  </gmd:referenceSystemInfo>
+  {% endif %}
+  {% endif %}
+  <gmd:identificationInfo>
+    <gmd:MD_DataIdentification>
+      <gmd:citation>
+        <gmd:CI_Citation>
+          <gmd:title>
+            <gco:CharacterString>{{ record['identification']['title'] }}</gco:CharacterString>
+          </gmd:title>
+          {% if record['identification']['alternTitle'] != None %}
+          <gmd:alternateTitle>
+            <gco:CharacterString>{{ record['identification']['alternTitle'] }}</gco:CharacterString>
+          </gmd:alternateTitle>
+          {% endif %}
+          {% for date_type, date in record['identification']['dates'].items() %}
+          {% if date != None %}
+          {% set datestamp = date|normalize_datestring %}
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                {% if datestamp|length > 11 %}
+                <gco:DateTime>{{ datestamp }}</gco:DateTime>
+                {% else %}
+                <gco:Date>{{ datestamp }}</gco:Date>
+                {% endif %}
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeSpace="ISOTC211/19115" codeListValue="{{ date_type }}">{{ date_type }}</gmd:CI_DateTypeCode>
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          {% endif %}
+          {% endfor %}
+		  <gmd:identifier>
+			<gmd:MD_Identifier>
+				<gmd:code>
+					<gco:CharacterString>{{ record['identification']['identifier'] }}</gco:CharacterString>
+				</gmd:code>
+		    </gmd:MD_Identifier>
+		  </gmd:identifier>
+          {% if record['identification']['presForm'] != None %}
+          <gmd:presentationForm>
+            <gmd:CI_PresentationFormCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_PresentationFormCode" codeListValue="{{ record['identification']['presForm'] }}">{{ record['identification']['presForm'] }}</gmd:CI_PresentationFormCode>
+          </gmd:presentationForm>
+          {% endif %}
+          {% if record['identification']['series'] != None %}
+          <gmd:series>
+            <gmd:CI_Series>
+              <gmd:name>
+                <gco:CharacterString>{{ record['identification']['series'] }}</gco:CharacterString>
+              </gmd:name>
+            </gmd:CI_Series>
+          </gmd:series>
+          {% endif %}
+        </gmd:CI_Citation>
+      </gmd:citation>
+      <gmd:abstract>
+        <gco:CharacterString>{{ record['identification']['abstract'] }}</gco:CharacterString>
+      </gmd:abstract>
+      {% if record['identification']['purpose'] != None %}
+      <gmd:purpose>
+        <gco:CharacterString>{{ record['identification']['purpose'] }}</gco:CharacterString>
+      </gmd:purpose>
+      {% endif %}
+      {% if record['identification']['status'] != None %}
+      <gmd:status>
+        <gmd:MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['status'] }}">{{ record['identification']['status'] }}</gmd:MD_ProgressCode>
+      </gmd:status>
+      {% endif %}
+      {% set contact = record['contact']['resContact'] %}
+      {% set role = 'pointOfContact' %}
+      <gmd:pointOfContact>
+      {% include "contact.j2" %}
+      </gmd:pointOfContact>
+      <gmd:resourceMaintenance>
+        {% if record['identification']['dataMaintenance']['maintenancefrequency'] != None %}
+        <gmd:MD_MaintenanceInformation>
+          <gmd:maintenanceAndUpdateFrequency>
+            <gmd:MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['dataMaintenance']['maintenancefrequency'] }}">{{ record['identification']['dataMaintenance']['maintenancefrequency'] }}</gmd:MD_MaintenanceFrequencyCode>
+          </gmd:maintenanceAndUpdateFrequency>
+          {% if record['identification']['dataMaintenance']['maintenanceNote'] != None %}
+          <gmd:maintenanceNote>
+            <gco:CharacterString>{{ record['identification']['dataMaintenance']['maintenanceNote'] }}</gco:CharacterString>
+          </gmd:maintenanceNote>
+          {% endif %}
+        </gmd:MD_MaintenanceInformation>
+        {% else %}
+        <gmd:MD_MaintenanceInformation gco:nilReason="unknown"/>
+        {% endif %}
+      </gmd:resourceMaintenance>
+      {% if record['identification']['browsegraphic'] != None %}
+      <gmd:graphicOverview>
+        <gmd:MD_BrowseGraphic>
+          <gmd:fileName>
+            <gco:CharacterString>{{ record['identification']['browsegraphic']|e }}</gco:CharacterString>
+            </gmd:fileName>
+        </gmd:MD_BrowseGraphic>
+      </gmd:graphicOverview>
+      {% endif %}
+      {% if record['identification']['resourceFormat']['formatName'] != None %}
+      <gmd:resourceFormat>
+        <gmd:MD_Format>
+          <gmd:name>
+            <gco:CharacterString>{{ record['identification']['resourceFormat']['formatName'] }}</gco:CharacterString>
+          </gmd:name>
+          <gmd:version>
+            <gco:CharacterString>{{ record['identification']['resourceFormat']['formatVersion'] }}</gco:CharacterString>
+          </gmd:version>
+        </gmd:MD_Format>
+      </gmd:resourceFormat>
+      {% endif %}
+      {% for key, value in record['identification']['keywords'].items() %}
+      {% if value['keywords'] != None %}
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+        {% set keyworte = value['keywords'].split(',') %}
+        {% for k in keyworte %}
+            {{ cs.get_freetext('keyword', None, [k]) }}
+        {% endfor %}
+		  {% if value['keywords_type'] %}
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeSpace="ISOTC211/19115" codeListValue="{{ value['keywords_type'] }}">{{ value['keywords_type'] }}</gmd:MD_KeywordTypeCode>
+          </gmd:type>
+		  {% else %}
+		  {% if value['keywords_thesa'] != None %}
+		  <gmd:thesaurusName>
+		    <gmd:CI_Citation>
+			  <gmd:title>
+			    <gco:CharacterString>{{ value['keywords_thesa'] }}</gco:CharacterString>
+			  </gmd:title>
+			  <gmd:date>
+				<gmd:CI_Date>
+				  <gmd:date>
+				    <gco:Date>{{ value['keywords_thesa_date'] }}</gco:Date>
+				  </gmd:date>
+				  <gmd:dateType>
+				    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+				  </gmd:dateType>
+				</gmd:CI_Date>
+			  </gmd:date>
+			</gmd:CI_Citation>
+		  </gmd:thesaurusName>
+		  {% endif %}
+		  {% endif %}
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      {% endif %}
+      {% endfor %}
+      {% if record['identification']['useLimitation'] != None %}
+	  <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:useLimitation>
+            <gco:CharacterString>{{ record['identification']['useLimitation'] }}</gco:CharacterString>
+          </gmd:useLimitation>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+	  {% else %}
+	  <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:useLimitation>
+            <gco:CharacterString>Nutzungseinschränkungen: Bedingungen unbekannt </gco:CharacterString>
+          </gmd:useLimitation>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+	  {% endif %}
+	  {% if record['identification']['useConstraints']['code'] in ['copyright', 'patent', 'patentPending', 'trademark', 'license', 'intellectualPropertyRights', 'restricted', 'otherRestrictions']%}
+	  <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:useLimitation>
+            <gco:CharacterString>Nutzungsbedingungen: {{ record['identification']['useConstraints']['otherConstraints'] }}</gco:CharacterString>
+          </gmd:useLimitation>
+		  <gmd:useConstraints>
+			<gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="{{ record['identification']['useConstraints']['code'] }}">{{ record['identification']['useConstraints']['code']}}</gmd:MD_RestrictionCode>
+		  </gmd:useConstraints>
+		  <gmd:otherConstraints>
+            <gco:CharacterString>{{ record['identification']['useConstraints']['otherConstraints'] }}</gco:CharacterString>
+          </gmd:otherConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+	  {% else %}
+	  {% if record['identification']['useConstraints']['code'] == None %}
+	  <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:useLimitation>
+            <gco:CharacterString>Nutzungsbedingungen: Bedingungen unbekannt</gco:CharacterString>
+          </gmd:useLimitation>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+	  <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+		  <gmd:useConstraints>
+			<gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
+		  </gmd:useConstraints>
+		  <gmd:otherConstraints>
+            <gco:CharacterString>Nutzungsbedingungen: Bedingungen unbekannt</gco:CharacterString>
+          </gmd:otherConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+	  {% else %}
+	  <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:useLimitation>
+            <gco:CharacterString>{{ record['identification']['useConstraints']['otherConstraints'] }}</gco:CharacterString>
+          </gmd:useLimitation>
+		  <gmd:useConstraints>
+			<gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
+		  </gmd:useConstraints>
+		  <gmd:otherConstraints>
+            <gco:CharacterString>{{ record['identification']['useConstraints']['otherConstraints'] }}</gco:CharacterString>
+          </gmd:otherConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+	  {% endif %}
+	  {% endif %}
+	  {% if record['identification']['accessConstraints']['code'] != None %}
+	  <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:accessConstraints>
+            <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['accessConstraints']['code'] }}">{{ record['identification']['accessConstraints']['code'] }}</gmd:MD_RestrictionCode>
+          </gmd:accessConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+	  {% else %}
+	  <gmd:resourceConstraints>
+        <gmd:MD_LegalConstraints>
+          <gmd:accessConstraints>
+            <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeSpace="ISOTC211/19115" codeListValue="otherConstraints">otherConstraints</gmd:MD_RestrictionCode>
+          </gmd:accessConstraints>
+		  <gmd:otherConstraints>
+            <gco:CharacterString>Bedingungen unbekannt</gco:CharacterString>
+          </gmd:otherConstraints>
+        </gmd:MD_LegalConstraints>
+      </gmd:resourceConstraints>
+	  {% endif %}
+      {% if record['identification']['securityConstraints'] != None %}
+      <gmd:resourceConstraints>
+        <gmd:MD_SecurityConstraints>
+          <gmd:classification>
+            <gmd:MD_ClassificationCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ClassificationCode" codeListValue="{{ record['identification']['securityConstraints'] }}">{{ record['identification']['securityConstraints'] }} </gmd:MD_ClassificationCode>
+          </gmd:classification>
+        </gmd:MD_SecurityConstraints>
+      </gmd:resourceConstraints>
+      {% endif %}
+      {% if record['spatial']['datatype'] in ['vector', 'grid', 'textTable', 'tin', 'stereo model', 'video'] %}
+      <gmd:spatialRepresentationType>
+        <gmd:MD_SpatialRepresentationTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['spatial']['datatype'] }}">{{ record['spatial']['datatype'] }}</gmd:MD_SpatialRepresentationTypeCode>
+      </gmd:spatialRepresentationType>
+      {% endif %}
+      {% if record['spatial']['scale'] != None %}
+      <gmd:spatialResolution>
+        <gmd:MD_Resolution>
+          <gmd:equivalentScale>
+            <gmd:MD_RepresentativeFraction>
+              <gmd:denominator>
+                <gco:Integer>{{ record['spatial']['scale'] }}</gco:Integer>
+              </gmd:denominator>
+            </gmd:MD_RepresentativeFraction>
+          </gmd:equivalentScale>
+        </gmd:MD_Resolution>  
+      </gmd:spatialResolution>
+      {% else %}
+      {% if record['spatial']['distance'] != None %}
+      <gmd:spatialResolution>
+        <gmd:MD_Resolution>
+          <gmd:distance>
+            <gco:Distance>{{ record['spatial']['distance'] }}</gco:Distance>
+          </gmd:distance>
+        </gmd:MD_Resolution>  
+      </gmd:spatialResolution>
+      {% endif %}
+      {% endif %}
+      {% if record['identification']['language'] in ['inapplicable', 'missing', 'template', 'unknown', 'withheld'] %}
+      <gmd:language gco:nilReason="{{ record['identification']['language'] }}"/>
+      {% else %}
+	  {% if record['identification']['language'] == None %}
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeSpace="ISO 639-2" codeListValue="zxx">no linguistic content; not applicable</gmd:LanguageCode>
+      </gmd:language>	  
+	  {% else %}
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeSpace="ISO 639-2" codeListValue="{{ record['identification']['language'] }}">{{ record['identification']['language'] }}</gmd:LanguageCode>
+      </gmd:language>
+	  {% endif %}
+      {% endif %}
+      {% if record['identification']['charset'] != None %}
+      <gmd:characterSet>
+        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['charset'] }}">{{ record['identification']['charset'] }}</gmd:MD_CharacterSetCode>
+      </gmd:characterSet>
+      {% endif %}
+      {% for tc in record['identification']['topiccategory'] %}
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>{{ tc }}</gmd:MD_TopicCategoryCode>
+      </gmd:topicCategory>
+      {% endfor %}
+      <gmd:extent>
+        <gmd:EX_Extent>
+          <gmd:geographicElement>
+            <gmd:EX_GeographicBoundingBox>
+              <gmd:extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </gmd:extentTypeCode>
+              {% if record['spatial']['westLon'] in ['unknown'] %}
+              <gmd:westBoundLongitude gco:nilReason="unknown"/>
+              <gmd:eastBoundLongitude gco:nilReason="unknown"/>
+              <gmd:southBoundLatitude gco:nilReason="unknown"/>
+              <gmd:northBoundLatitude gco:nilReason="unknown"/>
+              {% else %}
+              <gmd:westBoundLongitude>
+                <gco:Decimal>{{ record['spatial']['westLon'] }}</gco:Decimal>
+              </gmd:westBoundLongitude>
+              <gmd:eastBoundLongitude>
+                <gco:Decimal>{{ record['spatial']['eastLon'] }}</gco:Decimal>
+              </gmd:eastBoundLongitude>
+              <gmd:southBoundLatitude>
+                <gco:Decimal>{{ record['spatial']['southLat'] }}</gco:Decimal>
+              </gmd:southBoundLatitude>
+              <gmd:northBoundLatitude>
+                <gco:Decimal>{{ record['spatial']['northLat'] }}</gco:Decimal>
+              </gmd:northBoundLatitude>
+              {% endif %}
+            </gmd:EX_GeographicBoundingBox>
+          </gmd:geographicElement>
+          {% if record['spatial']['geogrIdent'] != None %}
+          <gmd:geographicElement>
+            <gmd:EX_GeographicDescription>
+                <gmd:geographicIdentifier>
+                    <gmd:MD_Identifier>
+                        <gmd:code>
+                            <gco:CharacterString>{{ record['spatial']['geogrIdent'] }}</gco:CharacterString>
+                        </gmd:code>
+                    </gmd:MD_Identifier>
+                </gmd:geographicIdentifier>
+            </gmd:EX_GeographicDescription>
+          </gmd:geographicElement>
+          {% endif %}
+		  {% if record['identification']['temporal_position'] != None %}
+          <gmd:temporalElement>
+            <gmd:EX_TemporalExtent>
+              <gmd:extent>
+				<gml:TimeInstant gml:id="T0001">
+				  <gml:timePosition>{{ record['identification']['temporal_position'] }}</gml:timePosition>
+				</gml:TimeInstant>
+			  </gmd:extent>
+			</gmd:EX_TemporalExtent>
+		  </gmd:temporalElement>	
+		  {% else %}
+		  {% if record['identification']['temporal_begin'] != None %}
+          <gmd:temporalElement>
+            <gmd:EX_TemporalExtent>
+              <gmd:extent>
+                <gml:TimePeriod gml:id="T001">
+                  <gml:beginPosition>{{ record['identification']['temporal_begin'] }}</gml:beginPosition>
+                  {% if record['identification']['temporal_end'] == 'now' %}
+                  <gml:endPosition indeterminatePosition="now"/>
+                  {% else %}
+                  <gml:endPosition>{{ record['identification']['temporal_end'] }}</gml:endPosition>
+                  {% endif %}
+                </gml:TimePeriod>
+			  </gmd:extent>
+            </gmd:EX_TemporalExtent>
+          </gmd:temporalElement>
+		  {% else %}
+		  {% endif %}
+		  {% endif %}
+        </gmd:EX_Extent>
+      </gmd:extent>
+      {% if record['identification']['url'] != None %}
+      <gmd:supplementalInformation>
+        <gco:CharacterString>{{ record['identification']['url'] }}</gco:CharacterString>
+      </gmd:supplementalInformation>
+      {% endif %}
+    </gmd:MD_DataIdentification>
+  </gmd:identificationInfo>
+  <gmd:distributionInfo>
+    <gmd:MD_Distribution>
+      {% if record['distribution']['formatName'] !=  None %}
+      <gmd:distributionFormat>
+        <gmd:MD_Format>
+          <gmd:name>
+            <gco:CharacterString>{{ record['distribution']['formatName'] }}</gco:CharacterString>
+          </gmd:name>
+          {% if record['distribution']['formatVersion'] != None %}
+          <gmd:version>
+            <gco:CharacterString>{{ record['distribution']['formatVersion'] }}</gco:CharacterString>
+          </gmd:version>
+          {% else %}
+          <gmd:version gco:nilReason="unknown"/>
+          {% endif %}
+        </gmd:MD_Format>
+      </gmd:distributionFormat>
+      {% endif %}
+      {% if record['contact']['distribution'] %}
+      <gmd:distributor>
+        <gmd:MD_Distributor>
+          <gmd:distributorContact>
+          {% set contact = record['contact']['distribution'] %}
+          {% set role = 'distributor' %}
+          {% include "contact.j2" %}
+          </gmd:distributorContact>
+        </gmd:MD_Distributor>
+      </gmd:distributor>
+      {% endif %}
+      {% for k, v in record['distribution']['transfer'].items() %}
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL>{{ v['url']|e }}</gmd:URL>
+              </gmd:linkage>
+              {% if v['type'] != None %}
+              <gmd:protocol>
+                <gco:CharacterString>{{ v['type'] }}</gco:CharacterString>
+              </gmd:protocol>
+              {% endif %}
+              {% if v['name'] != None %}
+              <gmd:name>
+                <gco:CharacterString>{{ v['name'] }}</gco:CharacterString>
+              </gmd:name>
+              {% endif %}
+              {% if v['description'] != None %}
+              <gmd:description>
+                <gco:CharacterString>{{ v['description'] }}</gco:CharacterString>
+              </gmd:description>
+              {% endif %}
+              {% if v['function'] != None %}
+              <gmd:function>
+                <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeSpace="ISOTC211/19115" codeListValue="{{ v['function'] }}">{{ v['function'] }}</gmd:CI_OnLineFunctionCode>
+              </gmd:function>
+              {% endif %}
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+      {% endfor %}
+    </gmd:MD_Distribution>
+  </gmd:distributionInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="{{ record['quality']['scope'] }}">{{ record['quality']['scope'] }}</gmd:MD_ScopeCode>
+          </gmd:level>
+        </gmd:DQ_Scope>
+      </gmd:scope>
+	  <gmd:report>
+	    <gmd:DQ_DomainConsistency>
+		  <gmd:result>
+			<gmd:DQ_ConformanceResult>
+			  <gmd:specification>
+				<gmd:CI_Citation>
+				  <gmd:title>
+					<gco:CharacterString>Verordnung (EG) Nr. 1089/2010 der Kommission 
+                                         vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG 
+                                         des Europäischen Parlaments und des Rates hinsichtlich der
+                                         Interoperabilität von Geodatensätzen und -diensten</gco:CharacterString>
+				  </gmd:title>			  
+				  <gmd:date>
+					<gmd:CI_Date>
+					  <gmd:date>
+						<gco:Date>2010-12-08</gco:Date>
+					  </gmd:date>
+					  <gmd:dateType>
+						<gmd:CI_DateTypeCode
+												codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+												codeListValue="publication" />
+					  </gmd:dateType>
+					</gmd:CI_Date>
+				  </gmd:date>
+				</gmd:CI_Citation>
+			  </gmd:specification>
+			  {% if record['quality']['report']['explanation'] != None %}
+			  <gmd:explanation>
+				<gco:CharacterString>{{ record['quality']['report']['explanation'] }}</gco:CharacterString>
+			  </gmd:explanation>
+			  {% else %}
+			  <gmd:explanation gco:nilReason="missing"/>			  
+			  {% endif %}
+			  {% if record['quality']['report']['pass'] != None %}
+			  <gmd:pass>
+				<gco:Boolean>{{ record['quality']['report']['pass'] }}</gco:Boolean>
+			  </gmd:pass>
+			  {% else %}
+			  <gmd:pass gco:nilReason="unknown"/>
+			  {% endif %}
+			</gmd:DQ_ConformanceResult>
+		  </gmd:result>
+		</gmd:DQ_DomainConsistency>
+	  </gmd:report>
+      <gmd:lineage>
+        <gmd:LI_Lineage>
+          <gmd:statement>
+            <gco:CharacterString>{{ record['quality']['lineage'] }}</gco:CharacterString>
+          </gmd:statement>
+        </gmd:LI_Lineage>
+      </gmd:lineage>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  {% if record['metadata']['mdMaintenance']['maintenancefrequency'] != None %}
+  <gmd:metadataMaintenance>
+    <gmd:MD_MaintenanceInformation>
+      <gmd:maintenanceAndUpdateFrequency>
+        <gmd:MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['metadata']['mdMaintenance']['maintenancefrequency'] }}">{{ record['metadata']['mdMaintenance']['maintenancefrequency'] }}</gmd:MD_MaintenanceFrequencyCode>
+      </gmd:maintenanceAndUpdateFrequency>
+      {% if record['metadata']['mdMaintenance']['maintenanceNote'] != None %}
+      <gmd:maintenanceNote>
+        <gco:CharacterString>{{ record['metadata']['mdMaintenance']['maintenanceNote'] }}</gco:CharacterString>
+      </gmd:maintenanceNote>
+      {% endif %}
+    </gmd:MD_MaintenanceInformation>
+  </gmd:metadataMaintenance>
+  {% endif %}
+</gmd:MD_Metadata>

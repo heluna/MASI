@@ -11,15 +11,17 @@ import pandas as pd
 
 
 def join_tables(table1, table2, key):
-    df1 = pd.read_csv(table1, encoding='ISO-8859-1', index_col=False, dtype=str)
-    df2 = pd.read_csv(table2, encoding='ISO-8859-1', index_col=False, dtype=str)
+    df1 = pd.read_csv(table1, encoding='UTF-8', index_col=False, dtype=str, delimiter = ";")
+    df2 = pd.read_csv(table2, encoding='UTF-8', index_col=False, dtype=str, delimiter = ";", usecols=["Datei", "SouthLat", "WestLon", "NorthLat", "EastLon" ])
     df3 = pd.merge(df1, df2, on=key, how='left')
     return df3
 
 if __name__ == "__main__":
-    tab1 = r'C:\Users\user\Desktop\georef\crawled_metadata_slub_maps.csv'
-    tab2 = r'C:\Users\user\Desktop\georef\metadata_georef_maps_-place.csv'
+    tab2 = r"C:\Users\user\Desktop\pygeometa\final\crawled_metadata_slub_maps_uuid_georef_places.csv"
+    tab1 = r"C:\Users\user\Desktop\pygeometa\final\crawled_metadata_slub_maps_uuid_places.csv"
     key = 'Datei'
-    out = r'C:\Users\user\Desktop\georef\metadata_join.csv'
+    out = r'C:\Users\user\Desktop\pygeometa\final\crawled_metadata_slub_maps_uuid_places_bbox.csv'
 
-    join_tables(tab1, tab2, key).to_csv(out, index=False, dtype=str, sep=";")
+    join_tables(tab1, tab2, key).to_csv(out, index=False, dtype=str, sep=";", encoding= "utf-8")
+
+#ISO-8859-1

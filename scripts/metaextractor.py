@@ -11,6 +11,7 @@ import os
 import csv
 from datetime import datetime
 from datetime import date
+import uuid
 
 # own modules
 from utils import crawlSLUB
@@ -22,6 +23,11 @@ def getISOTime():
     time = datetime.now().replace(microsecond=0)
     iso_time = time.isoformat()
     return iso_time
+
+def createUUID():
+    '''Return a universally unique identifier'''
+    uniqueID = str(uuid.uuid1())
+    return uniqueID
 
 
 def list_to_xml(datalist, rootname, mapfile, georefFile):

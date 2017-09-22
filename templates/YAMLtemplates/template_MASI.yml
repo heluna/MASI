@@ -1,0 +1,131 @@
+mcf:
+    version: 1.0.0
+
+metadata:
+    identifier: 
+    language:
+    language_alternate: 
+    charset: 
+    hierarchylevel:
+    hierarchyLevelName:    
+    datestamp: 
+    mdMaintenance:
+        maintenancefrequency: 
+        maintenanceNote:
+
+spatial:
+    datatype: 
+    scale:
+    distance:    
+    crs:
+        authority: 
+        code: 
+    westLon: 
+    eastLon: 
+    southLat: 
+    northLat: 
+    geogrIdent:
+
+identification:
+    language: 
+    charset: 
+    title: 
+    alternTitle:
+    abstract: 
+    dates:
+        distribution: 
+        creation:
+        revision:
+        publication:
+    identifier: 
+    purpose: 
+    status: 
+    presForm: 
+    series: 
+    keywords:
+        place:
+            keywords: 
+            keywords_type:
+        theme:
+            keywords: 
+            keywords_type:
+        discipline:
+            keywords: 
+            keywords_type:
+        GEMET:
+            keywords:
+            keywords_thesa:
+            keywords_thesa_date:
+        INSPIRE:
+            keywords:
+            keywords_thesa:
+            keywords_thesa_date:
+    topiccategory:
+        - 
+    useLimitation:
+    useConstraints:
+        code:
+        otherConstraints:
+    accessConstraints:
+        code: 
+        otherConstraints:
+    otherConstraints: 
+    securityConstraints:
+    url: 
+    temporal_position:
+    temporal_begin: 
+    temporal_end:
+    dataMaintenance:
+        maintenancefrequency: 
+        maintenanceNote:
+    browsegraphic: 
+    resourceFormat: 
+        formatName:
+        formatVersion:     
+
+contact:
+    main: &contact_main
+        individual: 
+        organization: 
+        url: 
+        phone: 
+        fax: 
+        address: 
+        city: 
+        postalcode: 
+        country: 
+        email: 
+        contactinstructions: 
+     
+    resContact: &contact_data
+        individual: 
+        organization: 
+        url: 
+        phone: 
+        fax: 
+        address: 
+        rcity: 
+        postalcode: 
+        country:
+        email: 
+        contactinstructions:
+
+    distribution: *contact_main
+
+distribution:
+    formatName:
+    formatVersion:
+    transfer:
+        link:
+            url: 
+            type: 
+            name: 
+            description: 
+            function: 
+
+quality:
+    scope: 
+    report:
+        explanation: 
+        pass:
+    lineage: 
